@@ -1,48 +1,24 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <title>비움 실시간 알림 (Fly.io 연결됨)</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body { background: #111; color: #0f0; font-family: sans-serif; padding: 20px; }
-    #alerts { margin-top: 20px; background: #000; border: 1px solid #444; padding: 10px; max-height: 300px; overflow-y: auto; }
-    .alert { padding: 5px 0; border-bottom: 1px solid #333; }
-    .buy { color: #00f6ff; }
-    .sell { color: #ff7070; }
-  </style>
+    <meta charset="UTF-8">
+    <title>비움 알림</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            text-align: center;
+            margin-top: 100px;
+            background-color: #f9f9f9;
+        }
+        .status {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2ecc71; /* 초록색 */
+        }
+    </style>
 </head>
 <body>
-  <h1>비움 실시간 알림 - Fly.io 연동</h1>
-  <p>서버 연결 상태: <span id="status">연결 중...</span></p>
-  <div id="alerts"></div>
-
-  <script>
-    const socket = new WebSocket("wss://bium.fly.dev");
-
-    socket.onopen = () => {
-      document.getElementById("status").textContent = "연결됨";
-    };
-
-    socket.onmessage = (event) => {
-      try {
-        const data = JSON.parse(event.data);
-        const div = document.createElement("div");
-        div.className = `alert ${data.type}`;
-        div.textContent = `[${new Date().toLocaleTimeString()}] ${data.message}`;
-        document.getElementById("alerts").prepend(div);
-      } catch (e) {
-        console.error("메시지 파싱 오류", e);
-      }
-    };
-
-    socket.onclose = () => {
-      document.getElementById("status").textContent = "연결 끊김";
-    };
-
-    socket.onerror = (e) => {
-      console.error("WebSocket 오류", e);
-    };
-  </script>
+    <div class="status">● 연결됨</div>
 </body>
 </html>
