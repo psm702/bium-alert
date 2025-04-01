@@ -3,22 +3,60 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <title>비움 알림</title>
+    <title>비움 실시간 알림</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
+            background: #f9f9f9;
+            padding: 2em;
             text-align: center;
-            margin-top: 100px;
-            background-color: #f9f9f9;
         }
         .status {
-            font-size: 2em;
-            font-weight: bold;
-            color: #2ecc71; /* 초록색 */
+            font-size: 1.5em;
+            margin-bottom: 1em;
+            color: #2ecc71;
+        }
+        .log {
+            margin-top: 1em;
+            background: #000;
+            color: #fff;
+            padding: 1em;
+            border-radius: 10px;
+            text-align: left;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .log-entry.buy {
+            color: #4FC3F7;
+        }
+        .log-entry.sell {
+            color: #EF5350;
         }
     </style>
 </head>
 <body>
     <div class="status">● 연결됨</div>
+    <div class="log" id="log">[비움] 알림 대기 중...</div>
+
+    <script>
+        const log = document.getElementById('log');
+        const socket = new WebSocket('wss://bium-alert-server.fly.dev/ws');
+
+        socket.onmessage = function(event) {
+            try {
+                const data = JSON.parse(event.data);
+                const typeClass = data.type === "buy" ? "buy" : "sell";
+                const now = new Date();
+                const time = now.toLocaleTimeString('ko-KR', { hour12: false });
+                const entry = document.createElement('div');
+                entry.className = 'log-entry ' + typeClass;
+                entry.innerText = `[${time}] ` + data.message;
+                log.prepend(entry);
+            } catch (e) {
+                console.error('수신 오류:', e);
+            }
+        };
+    </script>
 </body>
 </html>
